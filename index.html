@@ -330,6 +330,12 @@
   document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
   document.querySelectorAll('[data-theme-choice]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.themeChoice)));
 
+  // free hosting puts the demos to sleep; wake them now so they are up by the time someone clicks
+  ['https://live-orders-web.onrender.com', 'https://live-orders-api-c5zu.onrender.com/health',
+   'https://stock-manager-web-v2s6.onrender.com', 'https://stock-manager-gateway.onrender.com/',
+   'https://stock-manager-auth.onrender.com/docs', 'https://stock-manager-stock.onrender.com/docs',
+   'https://stock-manager-reports.onrender.com/docs'].forEach((url) => fetch(url, { mode: 'no-cors' }).catch(() => {}));
+
   const savedLang = read('lang');
   setLang(savedLang === 'pt' || savedLang === 'en' ? savedLang : (navigator.language || '').startsWith('pt') ? 'pt' : 'en');
   const savedTheme = read('theme');
