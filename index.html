@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rodrigo Zanardo · Portfolio</title>
-  <meta name="description" content="Projects by Rodrigo Zanardo: Stock Manager, an inventory control app with NestJS microservices, Next.js, Postgres and Docker.">
+  <meta name="description" content="Projects by Rodrigo Zanardo: Stock Manager, an inventory app with NestJS microservices, and Live Orders, a real-time order board with WebSockets and webhooks.">
   <script>
     // apply the saved theme before paint, so the page never flashes the wrong colors
     try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
@@ -89,7 +89,28 @@
     </div>
   </section>
 
-  <h2 data-i18n="inside">What is in the repository</h2>
+  <section class="card">
+    <h3>Live Orders</h3>
+    <p data-i18n="lo1">An order board for an auto parts counter that updates live on every open screen. When staff move an order, the counter, the board and any connected system see it within a second, with no reload. Customers browse the parts catalog and build a counter order.</p>
+    <p data-i18n="lo2">A NestJS API with PostgreSQL, Redis and BullMQ, and a Next.js frontend. WebSockets open with one-time tickets, incoming and outgoing webhooks are signed, outgoing webhooks refuse internal addresses, and failed deliveries are retried. It reads products from Stock Manager, and a delivered order lowers the stock there.</p>
+    <div class="tags">
+      <span>NestJS</span><span>WebSocket</span><span>Redis</span><span>BullMQ</span><span>PostgreSQL</span><span>Next.js</span><span>Webhooks</span>
+    </div>
+    <p class="muted" style="margin-top:16px"><span data-i18n="login">Demo login:</span> <code>demo@example.com</code> / <code>demo-orders-2026</code>. <span data-i18n="wake">The first visit after a quiet period can take about a minute (free hosting).</span></p>
+    <div class="links">
+      <a class="button solid" href="https://live-orders-web.onrender.com" data-i18n="demo">Live demo</a>
+      <a class="button" href="https://live-orders-web.onrender.com/cliente" data-i18n="shop">Parts catalog</a>
+      <a class="button" href="https://github.com/rodrigoZanardo/live-orders" data-i18n="code">Source code</a>
+      <a class="button" href="https://live-orders-api-c5zu.onrender.com/docs" data-i18n="apidocs">API docs</a>
+      <a class="button" href="https://github.com/rodrigoZanardo/live-orders/blob/main/docs/WEBHOOKS.md" data-i18n="webhooks">Webhooks guide</a>
+    </div>
+    <div class="shots">
+      <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png" alt="Live Orders board in light theme" data-i18n-alt="alt3" loading="lazy">
+      <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board-dark.png" alt="Live Orders board in dark theme" data-i18n-alt="alt4" loading="lazy">
+    </div>
+  </section>
+
+  <h2 data-i18n="inside">What is in the Stock Manager repository</h2>
   <section class="card">
     <ul>
       <li data-i18n="i1">Business rules in tested domain classes, with unit tests for each rule and integration tests against a real PostgreSQL database.</li>
@@ -125,7 +146,11 @@
     apidocs: 'Documentação da API', apidocsby: 'Documentação da API (Swagger) por serviço:',
     apidocshow: 'Faça login em POST /auth/login no Auth e cole o token em Authorize.',
     alt1: 'Dashboard do Stock Manager', alt2: 'Página de produto do Stock Manager com histórico',
-    inside: 'O que tem no repositório',
+    lo1: 'Um quadro de pedidos para balcão de autopeças que atualiza ao vivo em todas as telas abertas. Quando a equipe move um pedido, o balcão, o quadro e qualquer sistema conectado veem em menos de um segundo, sem recarregar. O cliente consulta o catálogo de peças e monta um pedido de balcão.',
+    lo2: 'Uma API NestJS com PostgreSQL, Redis e BullMQ, e front-end em Next.js. O WebSocket abre com ticket de uso único, os webhooks de entrada e saída são assinados, os de saída recusam endereços internos e as entregas que falham são repetidas. Os produtos vêm do Stock Manager, e um pedido entregue baixa o estoque lá.',
+    shop: 'Catálogo de peças', webhooks: 'Guia de webhooks',
+    alt3: 'Quadro do Live Orders no tema claro', alt4: 'Quadro do Live Orders no tema escuro',
+    inside: 'O que tem no repositório do Stock Manager',
     i1: 'Regras de negócio em classes de domínio testadas, com testes unitários para cada regra e testes de integração contra um PostgreSQL real.',
     i2: 'Proteção contra corrida em saídas de estoque, garantida no banco, com um teste de integração que falha se a proteção for removida.',
     i3: 'Senhas com hash scrypt, JWT assinado com RS256 e bloqueio após tentativas de login erradas.',
