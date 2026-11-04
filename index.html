@@ -100,6 +100,9 @@
     .project + .project { border-top: 1px dashed var(--line); padding-top: 48px; margin-top: 16px; }
     @media (min-width: 960px) { .project { grid-template-columns: 0.95fr 1.05fr; gap: 48px; align-items: start; } }
     .project h3 { font: 800 1.9rem/1.1 "Bricolage Grotesque", sans-serif; margin: 0 0 6px; }
+    .status { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; margin-left: 8px; font: 600 0.8rem/1 "IBM Plex Sans", sans-serif; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--signal); }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status[data-state="online"] { color: var(--ok); }
     .kind { color: var(--accent); font-weight: 600; margin: 0 0 16px; }
     .project p { margin: 0 0 14px; max-width: 62ch; }
     .points { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 10px; }
@@ -193,7 +196,7 @@
 
       <article class="project" id="live-orders">
         <div>
-          <h3>Live Orders</h3>
+          <h3>Live Orders <span class="status" data-status="live-orders" data-state="waking" data-i18n="waking" role="status">Waking up…</span></h3>
           <p class="kind" data-i18n="loKind">Real-time order board</p>
           <p data-i18n="lo1">When staff move an order, the counter, the board and any connected system see it within a second, with no reload. Customers browse the parts catalog and build a counter order.</p>
           <ul class="points">
@@ -220,7 +223,7 @@
 
       <article class="project" id="stock-manager">
         <div>
-          <h3>Stock Manager</h3>
+          <h3>Stock Manager <span class="status" data-status="stock-manager" data-state="waking" data-i18n="waking" role="status">Waking up…</span></h3>
           <p class="kind" data-i18n="smKind">Inventory control with microservices</p>
           <p data-i18n="p1">Products, stock in and out, low-stock alerts, roles (admin, operator and read-only), an audit trail of who changed what and when, a dashboard and an inventory report with restock suggestions and AI analysis.</p>
           <ul class="points">
@@ -299,9 +302,10 @@
     h3t: 'Erros que dizem o que fazer', h3: 'Cada erro tem um código estável que o front-end traduz para português ou inglês.',
     h4t: 'Agentes de IA com revisão', h4: 'Uso o Claude Code com skills escritas e agentes de revisão independentes; toda mudança ainda passa por testes, lint e leitura humana.',
     footer: 'Rodrigo Zanardo · Brasil',
+    online: 'No ar', waking: 'Acordando…',
     auto: 'Auto', light: 'Claro', dark: 'Escuro',
   };
-  const EN = {};
+  const EN = { online: 'Online', waking: 'Waking up…' };
   // keep the English text from the HTML, so the page reads correctly without JavaScript
   document.querySelectorAll('[data-i18n]').forEach((el) => { EN[el.dataset.i18n] = el.textContent.trim(); });
   document.querySelectorAll('[data-i18n-alt]').forEach((el) => { EN[el.dataset.i18nAlt] = el.alt; });
@@ -330,11 +334,21 @@
   document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
   document.querySelectorAll('[data-theme-choice]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.themeChoice)));
 
-  // free hosting puts the demos to sleep; wake them now so they are up by the time someone clicks
-  ['https://live-orders-web.onrender.com', 'https://live-orders-api-c5zu.onrender.com/health',
-   'https://stock-manager-web-v2s6.onrender.com', 'https://stock-manager-gateway.onrender.com/',
-   'https://stock-manager-auth.onrender.com/docs', 'https://stock-manager-stock.onrender.com/docs',
-   'https://stock-manager-reports.onrender.com/docs'].forEach((url) => fetch(url, { mode: 'no-cors' }).catch(() => {}));
+  // free hosting puts the demos to sleep: wake them now and show each project's state until they answer
+  const DEMOS = {
+    'live-orders': ['https://live-orders-web.onrender.com', 'https://live-orders-api-c5zu.onrender.com/health'],
+    'stock-manager': ['https://stock-manager-web-v2s6.onrender.com', 'https://stock-manager-gateway.onrender.com/',
+      'https://stock-manager-auth.onrender.com/docs', 'https://stock-manager-stock.onrender.com/docs',
+      'https://stock-manager-reports.onrender.com/docs'],
+  };
+  const showStatus = (id, key) => document.querySelectorAll(`[data-status="${id}"]`).forEach((el) => {
+    el.dataset.state = key; el.dataset.i18n = key; el.textContent = (document.documentElement.lang === 'pt-BR' ? PT : EN)[key];
+  });
+  Object.entries(DEMOS).forEach(([id, urls]) => {
+    showStatus(id, 'waking');
+    Promise.all(urls.map((url) => fetch(url, { mode: 'no-cors', cache: 'no-store' })))
+      .then(() => showStatus(id, 'online'), () => showStatus(id, 'waking'));
+  });
 
   const savedLang = read('lang');
   setLang(savedLang === 'pt' || savedLang === 'en' ? savedLang : (navigator.language || '').startsWith('pt') ? 'pt' : 'en');
