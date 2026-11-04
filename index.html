@@ -81,6 +81,7 @@
     .system > p { color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
     .nodes { display: grid; gap: 0; }
     .node { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--bg); }
+    .node strong a { color: inherit; }
     .node strong { font: 700 1.05rem/1.2 "Bricolage Grotesque", sans-serif; display: flex; align-items: center; gap: 8px; }
     .node span { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
     .live { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); }
@@ -171,7 +172,7 @@
         <p data-i18n="sysSub">Both are online. Each link below is a real call between them.</p>
         <div class="nodes">
           <div class="node">
-            <strong><i class="live" aria-hidden="true"></i>Live Orders</strong>
+            <strong><i class="live" aria-hidden="true"></i><a href="#live-orders">Live Orders</a></strong>
             <span data-i18n="sysLo">Order board for an auto parts counter, updated live</span>
           </div>
           <div class="links-between">
@@ -179,7 +180,7 @@
             <p class="flow" style="margin:0"><b data-i18n="flow2a">order delivered</b><span data-i18n="flow2b">signed webhook lowers the stock, retried until it lands</span></p>
           </div>
           <div class="node">
-            <strong><i class="live" aria-hidden="true"></i>Stock Manager</strong>
+            <strong><i class="live" aria-hidden="true"></i><a href="#stock-manager">Stock Manager</a></strong>
             <span data-i18n="sysSm">Inventory: three NestJS services behind one gateway</span>
           </div>
         </div>
@@ -190,7 +191,7 @@
       <h2 class="title" id="projects-title" data-i18n="projects">Projects</h2>
       <p class="intro" data-i18n="projectsIntro">Each one has a live demo with a test login, the full source code and API documentation. The first visit after a quiet period can take about a minute (free hosting).</p>
 
-      <article class="project">
+      <article class="project" id="live-orders">
         <div>
           <h3>Live Orders</h3>
           <p class="kind" data-i18n="loKind">Real-time order board</p>
@@ -217,7 +218,7 @@
         </div>
       </article>
 
-      <article class="project">
+      <article class="project" id="stock-manager">
         <div>
           <h3>Stock Manager</h3>
           <p class="kind" data-i18n="smKind">Inventory control with microservices</p>
