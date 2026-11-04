@@ -3,169 +3,308 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rodrigo Zanardo · Portfolio</title>
-  <meta name="description" content="Projects by Rodrigo Zanardo: Stock Manager, an inventory app with NestJS microservices, and Live Orders, a real-time order board with WebSockets and webhooks.">
+  <title>Rodrigo Zanardo · Full-stack developer</title>
+  <meta name="description" content="Rodrigo Zanardo, full-stack developer (NestJS, Next.js, PostgreSQL). Two live projects that talk to each other: Stock Manager, inventory with NestJS microservices, and Live Orders, a real-time order board with WebSockets and signed webhooks.">
+  <meta property="og:title" content="Rodrigo Zanardo · Full-stack developer">
+  <meta property="og:description" content="Two live projects that talk to each other: an inventory system and a real-time order board.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png">
+  <meta name="theme-color" content="#2450d8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232450d8'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ERZ%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script>
     // apply the saved theme before paint, so the page never flashes the wrong colors
     try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
   </script>
   <style>
-    :root { --ink: #1b2a28; --muted: #5d6b69; --panel: #ffffff; --line: #d9e1df; --brand: #1f6b5c; --brand-ink: #ffffff; --bg: #f3f6f5; --tag: #e5efec; }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) { --ink: #e6eeec; --muted: #9aaba8; --panel: #18211f; --line: #2b3835; --brand: #5cc4a8; --brand-ink: #0f1715; --bg: #0f1715; --tag: #1f2e2a; }
+    :root {
+      color-scheme: light;
+      --bg: #eef1f4; --panel: #ffffff; --ink: #10202e; --muted: #536273; --line: #d3dae2;
+      --accent: #2450d8; --accent-ink: #ffffff; --accent-soft: #e2e9fc; --signal: #c98a00; --ok: #17805a;
     }
-    :root[data-theme="dark"] { --ink: #e6eeec; --muted: #9aaba8; --panel: #18211f; --line: #2b3835; --brand: #5cc4a8; --brand-ink: #0f1715; --bg: #0f1715; --tag: #1f2e2a; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0d141c; --panel: #141e29; --ink: #e4ebf2; --muted: #93a3b4; --line: #26333f;
+        --accent: #7fa2ff; --accent-ink: #0d141c; --accent-soft: #1b2a47; --signal: #f2b636; --ok: #4cc995;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d141c; --panel: #141e29; --ink: #e4ebf2; --muted: #93a3b4; --line: #26333f;
+      --accent: #7fa2ff; --accent-ink: #0d141c; --accent-soft: #1b2a47; --signal: #f2b636; --ok: #4cc995;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
-    main { max-width: 880px; margin: 0 auto; padding: 24px 16px 80px; }
-    .bar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-bottom: 32px; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; font: 400 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    code { font-size: 0.9em; background: var(--accent-soft); padding: 1px 6px; border-radius: 4px; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+    @media (min-width: 640px) { .wrap { padding: 0 32px; } }
+    .skip { position: absolute; left: -9999px; }
+    .skip:focus { left: 16px; top: 16px; background: var(--panel); padding: 8px 12px; z-index: 10; }
+
+    /* top bar */
+    header.top { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
+    .mark { font: 800 1.1rem/1 "Bricolage Grotesque", sans-serif; color: var(--ink); text-decoration: none; }
+    .top nav { display: none; gap: 22px; margin-left: 28px; }
+    .top nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+    .top nav a:hover { color: var(--ink); }
+    @media (min-width: 760px) { .top nav { display: flex; } }
+    .controls { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
     .group { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
-    .group button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: var(--muted); padding: 6px 12px; font: inherit; font-size: 0.9rem; cursor: pointer; }
-    .group button[aria-pressed="true"] { background: var(--tag); color: var(--ink); font-weight: 600; }
-    .group button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .group button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: var(--muted); padding: 6px 10px; font: inherit; font-size: 0.85rem; cursor: pointer; }
+    .group button[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
     .flag { width: 20px; height: 14px; border-radius: 2px; }
-    h1 { font-size: 2.2rem; margin: 0 0 8px; }
-    h2 { font-size: 1.3rem; margin: 40px 0 12px; }
-    h3 { margin: 0 0 6px; }
-    p { margin: 0 0 14px; }
-    a { color: var(--brand); }
-    code { background: var(--tag); padding: 1px 6px; border-radius: 4px; }
-    .muted { color: var(--muted); }
-    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-top: 16px; }
-    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    a.button { display: inline-block; padding: 10px 16px; border-radius: 8px; text-decoration: none; border: 1px solid var(--brand); color: var(--brand); font-weight: 600; }
-    a.button.solid { background: var(--brand); color: var(--brand-ink); }
-    ul { padding-left: 20px; margin: 0; }
-    li { margin: 6px 0; }
-    .shots { display: grid; gap: 16px; margin-top: 16px; }
-    .shots img { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .tags span { background: var(--tag); color: var(--brand); padding: 4px 10px; border-radius: 999px; font-size: 0.85rem; }
-    footer { margin-top: 56px; font-size: 0.9rem; color: var(--muted); }
+    .lang-name { display: none; }
+    @media (min-width: 520px) { .lang-name { display: inline; } }
+
+    /* hero: the two projects as one connected system is the memorable thing on the page */
+    .hero { display: grid; gap: 40px; padding: 48px 0 72px; align-items: center; }
+    @media (min-width: 960px) { .hero { grid-template-columns: 1fr 1.05fr; gap: 56px; padding: 72px 0 96px; } }
+    h1 { font: 800 clamp(2.6rem, 7vw, 4.6rem)/0.98 "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; margin: 0 0 20px; }
+    .lead { font-size: 1.2rem; color: var(--ink); max-width: 34ch; margin: 0 0 12px; }
+    .sub { color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--panel); }
+    .btn:hover { border-color: var(--accent); }
+    .btn.solid { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+    .btn.solid:hover { filter: brightness(1.08); }
+    .btn svg { width: 18px; height: 18px; }
+
+    .system { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .system h2 { font: 600 1rem/1.3 "Bricolage Grotesque", sans-serif; margin: 0 0 4px; }
+    .system > p { color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
+    .nodes { display: grid; gap: 0; }
+    .node { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: var(--bg); }
+    .node strong { font: 700 1.05rem/1.2 "Bricolage Grotesque", sans-serif; display: flex; align-items: center; gap: 8px; }
+    .node span { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+    .live { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); }
+    @media (prefers-reduced-motion: no-preference) { .live { animation: pulse 2s ease-out infinite; } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); } 100% { box-shadow: 0 0 0 9px transparent; } }
+    .links-between { display: grid; gap: 6px; padding: 12px 0 12px 22px; border-left: 2px dashed var(--line); margin-left: 22px; }
+    .flow { display: flex; gap: 10px; align-items: baseline; font-size: 0.88rem; }
+    .flow b { color: var(--signal); font-weight: 600; white-space: nowrap; }
+    .flow span { color: var(--muted); }
+
+    /* projects */
+    section.block { padding: 72px 0; border-top: 1px solid var(--line); }
+    h2.title { font: 800 clamp(1.8rem, 4vw, 2.4rem)/1.1 "Bricolage Grotesque", sans-serif; letter-spacing: -0.01em; margin: 0 0 8px; }
+    .intro { color: var(--muted); max-width: 60ch; margin: 0 0 40px; }
+    .project { display: grid; gap: 28px; padding: 32px 0; }
+    .project + .project { border-top: 1px dashed var(--line); padding-top: 48px; margin-top: 16px; }
+    @media (min-width: 960px) { .project { grid-template-columns: 0.95fr 1.05fr; gap: 48px; align-items: start; } }
+    .project h3 { font: 800 1.9rem/1.1 "Bricolage Grotesque", sans-serif; margin: 0 0 6px; }
+    .kind { color: var(--accent); font-weight: 600; margin: 0 0 16px; }
+    .project p { margin: 0 0 14px; max-width: 62ch; }
+    .points { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 10px; }
+    .points li { padding-left: 22px; position: relative; }
+    .points li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 10px; height: 2px; background: var(--accent); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; padding: 0; list-style: none; }
+    .tags li { border: 1px solid var(--line); color: var(--muted); padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 500; }
+    .login { font-size: 0.9rem; color: var(--muted); margin: 0 0 16px; }
+    .more { font-size: 0.9rem; color: var(--muted); margin-top: 14px; }
+    .shots { display: grid; gap: 14px; }
+    .shots img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+    @media (min-width: 960px) { .shots { position: sticky; top: 24px; } }
+
+    /* how I work */
+    .habits { display: grid; gap: 16px; padding: 0; margin: 0; list-style: none; }
+    @media (min-width: 760px) { .habits { grid-template-columns: repeat(2, 1fr); } }
+    .habits li { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+    .habits strong { display: block; font: 600 1.05rem/1.3 "Bricolage Grotesque", sans-serif; margin-bottom: 6px; }
+    .habits span { color: var(--muted); font-size: 0.95rem; }
+
+    footer { border-top: 1px solid var(--line); padding: 40px 0 64px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+    footer p { margin: 0; color: var(--muted); }
   </style>
 </head>
 <body>
-<main>
-  <div class="bar">
-    <div class="group" role="group" aria-label="Language">
-      <button type="button" data-lang="en" lang="en">
-        <svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>
-        English
-      </button>
-      <button type="button" data-lang="pt" lang="pt-BR">
-        <svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.2 7 10 12.4 1.8 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.1" fill="#002776"/></svg>
-        Português
-      </button>
+<a class="skip" href="#projects" data-i18n="skip">Skip to projects</a>
+<div class="wrap">
+  <header class="top">
+    <a class="mark" href="#">Rodrigo Zanardo</a>
+    <nav aria-label="Sections" data-i18n-label="sections">
+      <a href="#projects" data-i18n="navProjects">Projects</a>
+      <a href="#how" data-i18n="navHow">How I work</a>
+    </nav>
+    <div class="controls">
+      <div class="group" role="group" aria-label="Language" data-i18n-label="language">
+        <button type="button" data-lang="en" lang="en">
+          <svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>
+          <span class="lang-name">English</span>
+        </button>
+        <button type="button" data-lang="pt" lang="pt-BR">
+          <svg class="flag" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.2 7 10 12.4 1.8 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.1" fill="#002776"/></svg>
+          <span class="lang-name">Português</span>
+        </button>
+      </div>
+      <div class="group" role="group" aria-label="Theme" data-i18n-label="theme">
+        <button type="button" data-theme-choice="auto" data-i18n="auto">Auto</button>
+        <button type="button" data-theme-choice="light" data-i18n="light">Light</button>
+        <button type="button" data-theme-choice="dark" data-i18n="dark">Dark</button>
+      </div>
     </div>
-    <div class="group" role="group" data-i18n-label="theme">
-      <button type="button" data-theme-choice="auto" data-i18n="auto">Auto</button>
-      <button type="button" data-theme-choice="light" data-i18n="light">Light</button>
-      <button type="button" data-theme-choice="dark" data-i18n="dark">Dark</button>
-    </div>
-  </div>
+  </header>
 
-  <h1>Rodrigo Zanardo</h1>
-  <p class="muted" data-i18n="role">Full-stack developer. Backend in NestJS and TypeScript, frontend in Next.js, PostgreSQL and Docker.</p>
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Rodrigo Zanardo</h1>
+        <p class="lead" data-i18n="lead">Full-stack developer. I build backends in NestJS and TypeScript and the screens people use on top of them.</p>
+        <p class="sub" data-i18n="sub">Below are two systems I wrote from scratch and keep running online. They talk to each other, so you can see one change land in the other.</p>
+        <div class="cta">
+          <a class="btn solid" href="#projects" data-i18n="seeProjects">See the projects</a>
+          <a class="btn" href="https://github.com/rodrigoZanardo">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
 
-  <h2 data-i18n="projects">Projects</h2>
-  <section class="card">
-    <h3>Stock Manager</h3>
-    <p data-i18n="p1">An inventory control app written from scratch: products, stock in and out, low-stock alerts, roles (admin and operator), an audit trail of who changed what and when, a dashboard, and an inventory report with restock suggestions and AI analysis.</p>
-    <p data-i18n="p2">The backend is three NestJS services behind an nginx gateway. Each service owns its data: auth and stock have separate databases, and reports reads stock over HTTP. The business rules live in tested domain classes, and every error has a stable code that the frontend translates.</p>
-    <div class="tags">
-      <span>NestJS</span><span>Prisma</span><span>PostgreSQL</span><span>Next.js</span><span>TypeScript</span><span>Docker</span><span>Playwright</span><span>GitHub Actions</span>
-    </div>
-    <p class="muted" style="margin-top:16px"><span data-i18n="login">Demo login:</span> <code>demo@example.com</code> / <code>demo-stock-2026</code>. <span data-i18n="wake">The first visit after a quiet period can take about a minute (free hosting).</span></p>
-    <div class="links">
-      <a class="button solid" href="https://stock-manager-web-v2s6.onrender.com" data-i18n="demo">Live demo</a>
-      <a class="button" href="https://github.com/rodrigoZanardo/stock-manager" data-i18n="code">Source code</a>
-      <a class="button" href="https://stock-manager-stock.onrender.com/docs" data-i18n="apidocs">API docs</a>
-      <a class="button" href="https://github.com/rodrigoZanardo/stock-manager/blob/main/docs/DEPLOY.md" data-i18n="deploy">How it is deployed</a>
-    </div>
-    <p class="muted" style="margin-top:12px"><span data-i18n="apidocsby">API docs (Swagger) per service:</span> <a href="https://stock-manager-auth.onrender.com/docs">Auth</a> · <a href="https://stock-manager-stock.onrender.com/docs">Stock</a> · <a href="https://stock-manager-reports.onrender.com/docs">Reports</a>. <span data-i18n="apidocshow">Sign in with POST /auth/login on Auth and paste the token in Authorize.</span></p>
-    <div class="shots">
-      <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/dashboard.png" alt="Stock Manager dashboard" data-i18n-alt="alt1" loading="lazy">
-      <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/product.png" alt="Stock Manager product page with history" data-i18n-alt="alt2" loading="lazy">
-    </div>
-  </section>
+      <aside class="system" aria-labelledby="system-title">
+        <h2 id="system-title" data-i18n="sysTitle">How the two projects connect</h2>
+        <p data-i18n="sysSub">Both are online. Each link below is a real call between them.</p>
+        <div class="nodes">
+          <div class="node">
+            <strong><i class="live" aria-hidden="true"></i>Live Orders</strong>
+            <span data-i18n="sysLo">Order board for an auto parts counter, updated live</span>
+          </div>
+          <div class="links-between">
+            <p class="flow" style="margin:0"><b data-i18n="flow1a">reads parts</b><span data-i18n="flow1b">catalog from Stock Manager with a read-only account</span></p>
+            <p class="flow" style="margin:0"><b data-i18n="flow2a">order delivered</b><span data-i18n="flow2b">signed webhook lowers the stock, retried until it lands</span></p>
+          </div>
+          <div class="node">
+            <strong><i class="live" aria-hidden="true"></i>Stock Manager</strong>
+            <span data-i18n="sysSm">Inventory: three NestJS services behind one gateway</span>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-  <section class="card">
-    <h3>Live Orders</h3>
-    <p data-i18n="lo1">An order board for an auto parts counter that updates live on every open screen. When staff move an order, the counter, the board and any connected system see it within a second, with no reload. Customers browse the parts catalog and build a counter order.</p>
-    <p data-i18n="lo2">A NestJS API with PostgreSQL, Redis and BullMQ, and a Next.js frontend. WebSockets open with one-time tickets, incoming and outgoing webhooks are signed, outgoing webhooks refuse internal addresses, and failed deliveries are retried. It reads products from Stock Manager, and a delivered order lowers the stock there.</p>
-    <div class="tags">
-      <span>NestJS</span><span>WebSocket</span><span>Redis</span><span>BullMQ</span><span>PostgreSQL</span><span>Next.js</span><span>Webhooks</span>
-    </div>
-    <p class="muted" style="margin-top:16px"><span data-i18n="login">Demo login:</span> <code>demo@example.com</code> / <code>demo-orders-2026</code>. <span data-i18n="wake">The first visit after a quiet period can take about a minute (free hosting).</span></p>
-    <div class="links">
-      <a class="button solid" href="https://live-orders-web.onrender.com" data-i18n="demo">Live demo</a>
-      <a class="button" href="https://live-orders-web.onrender.com/cliente" data-i18n="shop">Parts catalog</a>
-      <a class="button" href="https://github.com/rodrigoZanardo/live-orders" data-i18n="code">Source code</a>
-      <a class="button" href="https://live-orders-api-c5zu.onrender.com/docs" data-i18n="apidocs">API docs</a>
-      <a class="button" href="https://github.com/rodrigoZanardo/live-orders/blob/main/docs/WEBHOOKS.md" data-i18n="webhooks">Webhooks guide</a>
-    </div>
-    <div class="shots">
-      <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png" alt="Live Orders board in light theme" data-i18n-alt="alt3" loading="lazy">
-      <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board-dark.png" alt="Live Orders board in dark theme" data-i18n-alt="alt4" loading="lazy">
-    </div>
-  </section>
+    <section class="block" id="projects" aria-labelledby="projects-title">
+      <h2 class="title" id="projects-title" data-i18n="projects">Projects</h2>
+      <p class="intro" data-i18n="projectsIntro">Each one has a live demo with a test login, the full source code and API documentation. The first visit after a quiet period can take about a minute (free hosting).</p>
 
-  <h2 data-i18n="inside">What is in the Stock Manager repository</h2>
-  <section class="card">
-    <ul>
-      <li data-i18n="i1">Business rules in tested domain classes, with unit tests for each rule and integration tests against a real PostgreSQL database.</li>
-      <li data-i18n="i2">A race guard for stock withdrawals, enforced in the database, with an integration test that fails if the guard is removed.</li>
-      <li data-i18n="i3">Passwords hashed with scrypt, JWTs signed with RS256, a lockout after repeated failed sign-ins.</li>
-      <li data-i18n="i4">API documentation in Swagger for every route, with the error responses each route can return.</li>
-      <li data-i18n="i5">Browser end-to-end tests run in CI against the full Docker stack.</li>
-    </ul>
-  </section>
+      <article class="project">
+        <div>
+          <h3>Live Orders</h3>
+          <p class="kind" data-i18n="loKind">Real-time order board</p>
+          <p data-i18n="lo1">When staff move an order, the counter, the board and any connected system see it within a second, with no reload. Customers browse the parts catalog and build a counter order.</p>
+          <ul class="points">
+            <li data-i18n="lop1">Real time that survives dropped connections: events have a sequence number and the board catches up on what it missed.</li>
+            <li data-i18n="lop2">WebSockets open with one-time tickets, so the session token never reaches the browser.</li>
+            <li data-i18n="lop3">Signed incoming and outgoing webhooks, retried with a queue; outgoing ones refuse internal addresses.</li>
+          </ul>
+          <ul class="tags" aria-label="Stack" data-i18n-label="stack">
+            <li>NestJS</li><li>WebSocket</li><li>Redis</li><li>BullMQ</li><li>PostgreSQL</li><li>Next.js</li>
+          </ul>
+          <p class="login"><span data-i18n="login">Demo login:</span> <code>demo@example.com</code> / <code>demo-orders-2026</code></p>
+          <div class="cta">
+            <a class="btn solid" href="https://live-orders-web.onrender.com" data-i18n="demo">Open the demo</a>
+            <a class="btn" href="https://live-orders-web.onrender.com/cliente" data-i18n="shop">Parts catalog</a>
+            <a class="btn" href="https://github.com/rodrigoZanardo/live-orders" data-i18n="code">Source code</a>
+          </div>
+          <p class="more"><a href="https://live-orders-api-c5zu.onrender.com/docs" data-i18n="apidocs">API docs (Swagger)</a> · <a href="https://github.com/rodrigoZanardo/live-orders/blob/main/docs/WEBHOOKS.md" data-i18n="webhooks">Webhooks guide</a></p>
+        </div>
+        <div class="shots">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png" alt="Live Orders board in light theme" data-i18n-alt="alt3" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board-dark.png" alt="Live Orders board in dark theme" data-i18n-alt="alt4" loading="lazy" width="1600" height="1000">
+        </div>
+      </article>
 
-  <h2 data-i18n="next">Next improvements</h2>
-  <section class="card">
-    <ul>
-      <li data-i18n="n1">Let admins change passwords and disable users, with tokens that stop working right away.</li>
-      <li data-i18n="n2">Product photos and CSV import for stock counts.</li>
-      <li data-i18n="n3">Use a private network between the services in production.</li>
-    </ul>
-  </section>
+      <article class="project">
+        <div>
+          <h3>Stock Manager</h3>
+          <p class="kind" data-i18n="smKind">Inventory control with microservices</p>
+          <p data-i18n="p1">Products, stock in and out, low-stock alerts, roles (admin, operator and read-only), an audit trail of who changed what and when, a dashboard and an inventory report with restock suggestions and AI analysis.</p>
+          <ul class="points">
+            <li data-i18n="i1">Three NestJS services behind an nginx gateway; each owns its data, and reports reads stock over HTTP.</li>
+            <li data-i18n="i2">Stock can never go below zero, even with two withdrawals at once: the database enforces it and a test fails if the guard is removed.</li>
+            <li data-i18n="i3">Passwords hashed with scrypt, tokens signed with RS256, lockout after repeated failed sign-ins.</li>
+            <li data-i18n="i5">Browser tests run in CI against the full Docker stack.</li>
+          </ul>
+          <ul class="tags" aria-label="Stack" data-i18n-label="stack">
+            <li>NestJS</li><li>Prisma</li><li>PostgreSQL</li><li>Next.js</li><li>Docker</li><li>Playwright</li><li>GitHub Actions</li>
+          </ul>
+          <p class="login"><span data-i18n="login">Demo login:</span> <code>demo@example.com</code> / <code>demo-stock-2026</code></p>
+          <div class="cta">
+            <a class="btn solid" href="https://stock-manager-web-v2s6.onrender.com" data-i18n="demo">Open the demo</a>
+            <a class="btn" href="https://github.com/rodrigoZanardo/stock-manager" data-i18n="code">Source code</a>
+          </div>
+          <p class="more"><span data-i18n="apidocsby">API docs (Swagger):</span> <a href="https://stock-manager-auth.onrender.com/docs">Auth</a> · <a href="https://stock-manager-stock.onrender.com/docs">Stock</a> · <a href="https://stock-manager-reports.onrender.com/docs">Reports</a> · <a href="https://github.com/rodrigoZanardo/stock-manager/blob/main/docs/DEPLOY.md" data-i18n="deploy">How it is deployed</a></p>
+        </div>
+        <div class="shots">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/dashboard.png" alt="Stock Manager dashboard" data-i18n-alt="alt1" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/product.png" alt="Stock Manager product page with history" data-i18n-alt="alt2" loading="lazy" width="1600" height="1000">
+        </div>
+      </article>
+    </section>
+
+    <section class="block" id="how" aria-labelledby="how-title">
+      <h2 class="title" id="how-title" data-i18n="navHow">How I work</h2>
+      <p class="intro" data-i18n="howIntro">The same habits in both repositories.</p>
+      <ul class="habits">
+        <li><strong data-i18n="h1t">Rules live in the backend</strong><span data-i18n="h1">Business rules sit in tested domain classes on the service that owns the data, never only in the screen.</span></li>
+        <li><strong data-i18n="h2t">A test for every rule and fix</strong><span data-i18n="h2">Unit tests per rule, integration tests against real PostgreSQL and Redis, and a failing test before each bug fix.</span></li>
+        <li><strong data-i18n="h3t">Errors people can act on</strong><span data-i18n="h3">Every error has a stable code that the frontend translates into English or Portuguese.</span></li>
+        <li><strong data-i18n="h4t">AI agents with review</strong><span data-i18n="h4">I use Claude Code with written skills and independent review agents; every change still passes tests, lint and a human read.</span></li>
+      </ul>
+    </section>
+  </main>
 
   <footer>
-    <p>GitHub: <a href="https://github.com/rodrigoZanardo">rodrigoZanardo</a></p>
+    <p data-i18n="footer">Rodrigo Zanardo · Brazil</p>
+    <a class="btn" href="https://github.com/rodrigoZanardo">github.com/rodrigoZanardo</a>
   </footer>
-</main>
+</div>
 <script>
   const PT = {
-    role: 'Desenvolvedor full-stack. Backend em NestJS e TypeScript, front-end em Next.js, PostgreSQL e Docker.',
+    skip: 'Pular para os projetos', sections: 'Seções', language: 'Idioma', theme: 'Tema', stack: 'Tecnologias',
+    navProjects: 'Projetos', navHow: 'Como eu trabalho',
+    lead: 'Desenvolvedor full-stack. Construo backends em NestJS e TypeScript e as telas que as pessoas usam em cima deles.',
+    sub: 'Abaixo estão dois sistemas que escrevi do zero e mantenho no ar. Eles conversam entre si, então dá para ver uma mudança em um chegar no outro.',
+    seeProjects: 'Ver os projetos',
+    sysTitle: 'Como os dois projetos se conectam', sysSub: 'Os dois estão no ar. Cada ligação abaixo é uma chamada real entre eles.',
+    sysLo: 'Quadro de pedidos para balcão de autopeças, atualizado ao vivo',
+    flow1a: 'lê as peças', flow1b: 'do catálogo do Stock Manager com uma conta só de leitura',
+    flow2a: 'pedido entregue', flow2b: 'webhook assinado baixa o estoque, repetido até chegar',
+    sysSm: 'Estoque: três serviços NestJS atrás de um gateway',
     projects: 'Projetos',
-    p1: 'Um sistema de controle de estoque escrito do zero: produtos, entradas e saídas, alertas de estoque baixo, perfis (admin e operador), trilha de auditoria de quem mudou o quê e quando, dashboard e relatório de inventário com sugestão de reposição e análise por IA.',
-    p2: 'O backend são três serviços NestJS atrás de um gateway nginx. Cada serviço é dono dos seus dados: auth e stock têm bancos separados, e o reports lê o estoque por HTTP. As regras de negócio ficam em classes de domínio testadas, e cada erro tem um código estável que o front-end traduz.',
-    login: 'Login do demo:',
-    wake: 'A primeira visita depois de um tempo parado pode levar cerca de um minuto (hospedagem gratuita).',
-    demo: 'Ver demo', code: 'Código-fonte', deploy: 'Como é publicado',
-    apidocs: 'Documentação da API', apidocsby: 'Documentação da API (Swagger) por serviço:',
-    apidocshow: 'Faça login em POST /auth/login no Auth e cole o token em Authorize.',
+    projectsIntro: 'Cada um tem demo no ar com login de teste, código-fonte completo e documentação da API. A primeira visita depois de um tempo parado pode levar cerca de um minuto (hospedagem gratuita).',
+    loKind: 'Quadro de pedidos em tempo real',
+    lo1: 'Quando a equipe move um pedido, o balcão, o quadro e qualquer sistema conectado veem em menos de um segundo, sem recarregar. O cliente consulta o catálogo de peças e monta um pedido de balcão.',
+    lop1: 'Tempo real que aguenta queda de conexão: os eventos têm número de sequência e o quadro busca o que perdeu.',
+    lop2: 'O WebSocket abre com ticket de uso único, então o token da sessão nunca chega ao navegador.',
+    lop3: 'Webhooks de entrada e saída assinados, repetidos por fila; os de saída recusam endereços internos.',
+    login: 'Login do demo:', demo: 'Abrir o demo', shop: 'Catálogo de peças', code: 'Código-fonte',
+    apidocs: 'Documentação da API (Swagger)', webhooks: 'Guia de webhooks',
     alt1: 'Dashboard do Stock Manager', alt2: 'Página de produto do Stock Manager com histórico',
-    lo1: 'Um quadro de pedidos para balcão de autopeças que atualiza ao vivo em todas as telas abertas. Quando a equipe move um pedido, o balcão, o quadro e qualquer sistema conectado veem em menos de um segundo, sem recarregar. O cliente consulta o catálogo de peças e monta um pedido de balcão.',
-    lo2: 'Uma API NestJS com PostgreSQL, Redis e BullMQ, e front-end em Next.js. O WebSocket abre com ticket de uso único, os webhooks de entrada e saída são assinados, os de saída recusam endereços internos e as entregas que falham são repetidas. Os produtos vêm do Stock Manager, e um pedido entregue baixa o estoque lá.',
-    shop: 'Catálogo de peças', webhooks: 'Guia de webhooks',
     alt3: 'Quadro do Live Orders no tema claro', alt4: 'Quadro do Live Orders no tema escuro',
-    inside: 'O que tem no repositório do Stock Manager',
-    i1: 'Regras de negócio em classes de domínio testadas, com testes unitários para cada regra e testes de integração contra um PostgreSQL real.',
-    i2: 'Proteção contra corrida em saídas de estoque, garantida no banco, com um teste de integração que falha se a proteção for removida.',
-    i3: 'Senhas com hash scrypt, JWT assinado com RS256 e bloqueio após tentativas de login erradas.',
-    i4: 'Documentação da API no Swagger para todas as rotas, com as respostas de erro de cada uma.',
-    i5: 'Testes de navegador de ponta a ponta rodando no CI contra o stack completo em Docker.',
-    next: 'Próximas melhorias',
-    n1: 'Permitir que admins troquem senhas e desativem usuários, com tokens que deixam de valer na hora.',
-    n2: 'Fotos de produto e importação de contagem de estoque por CSV.',
-    n3: 'Usar uma rede privada entre os serviços em produção.',
-    auto: 'Auto', light: 'Claro', dark: 'Escuro', theme: 'Tema',
+    smKind: 'Controle de estoque com microsserviços',
+    p1: 'Produtos, entradas e saídas, alertas de estoque baixo, perfis (admin, operador e só leitura), trilha de auditoria de quem mudou o quê e quando, dashboard e relatório de inventário com sugestão de reposição e análise por IA.',
+    i1: 'Três serviços NestJS atrás de um gateway nginx; cada um é dono dos seus dados, e o reports lê o estoque por HTTP.',
+    i2: 'O estoque nunca fica negativo, nem com duas saídas ao mesmo tempo: o banco garante, e um teste falha se a proteção for removida.',
+    i3: 'Senhas com hash scrypt, tokens assinados com RS256 e bloqueio após tentativas de login erradas.',
+    i5: 'Testes de navegador rodam no CI contra o stack completo em Docker.',
+    apidocsby: 'Documentação da API (Swagger):', deploy: 'Como é publicado',
+    howIntro: 'Os mesmos hábitos nos dois repositórios.',
+    h1t: 'Regra fica no backend', h1: 'As regras de negócio ficam em classes de domínio testadas, no serviço dono dos dados, nunca só na tela.',
+    h2t: 'Um teste para cada regra e correção', h2: 'Testes unitários por regra, de integração contra PostgreSQL e Redis reais, e um teste que falha antes de cada correção.',
+    h3t: 'Erros que dizem o que fazer', h3: 'Cada erro tem um código estável que o front-end traduz para português ou inglês.',
+    h4t: 'Agentes de IA com revisão', h4: 'Uso o Claude Code com skills escritas e agentes de revisão independentes; toda mudança ainda passa por testes, lint e leitura humana.',
+    footer: 'Rodrigo Zanardo · Brasil',
+    auto: 'Auto', light: 'Claro', dark: 'Escuro',
   };
-  const EN = { theme: 'Theme' };
+  const EN = {};
   // keep the English text from the HTML, so the page reads correctly without JavaScript
   document.querySelectorAll('[data-i18n]').forEach((el) => { EN[el.dataset.i18n] = el.textContent.trim(); });
   document.querySelectorAll('[data-i18n-alt]').forEach((el) => { EN[el.dataset.i18nAlt] = el.alt; });
+  document.querySelectorAll('[data-i18n-label]').forEach((el) => { EN[el.dataset.i18nLabel] = el.getAttribute('aria-label'); });
 
   const save = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
   const read = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
