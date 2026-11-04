@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rodrigo Zanardo · Portfolio</title>
+  <meta name="description" content="Projects by Rodrigo Zanardo: Stock Manager, an inventory control app with NestJS microservices, Next.js, Postgres and Docker.">
+  <style>
+    :root { --ink: #1b2a28; --muted: #5d6b69; --panel: #ffffff; --line: #d9e1df; --brand: #1f6b5c; --bg: #f3f6f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+    main { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
+    h1 { font-size: 2.2rem; margin: 0 0 8px; }
+    h2 { font-size: 1.3rem; margin: 40px 0 12px; }
+    p { margin: 0 0 14px; }
+    .muted { color: var(--muted); }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-top: 16px; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    a.button { display: inline-block; padding: 10px 16px; border-radius: 8px; text-decoration: none; border: 1px solid var(--brand); color: var(--brand); font-weight: 600; }
+    a.button.solid { background: var(--brand); color: #fff; }
+    ul { padding-left: 20px; margin: 0; }
+    li { margin: 6px 0; }
+    .shots { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 12px; }
+    .shots img { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tags span { background: #e5efec; color: var(--brand); padding: 4px 10px; border-radius: 999px; font-size: 0.85rem; }
+    footer { margin-top: 56px; font-size: 0.9rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Rodrigo Zanardo</h1>
+  <p class="muted">Full-stack developer. Backend in NestJS and TypeScript, frontend in Next.js, PostgreSQL and Docker.</p>
+
+  <h2>Projects</h2>
+  <section class="card">
+    <h3 style="margin:0 0 6px">Stock Manager</h3>
+    <p>An inventory control app written from scratch: products, stock in and out, low-stock alerts, roles (admin and operator), an audit trail of who changed what and when, a dashboard, and an inventory report with restock suggestions and AI analysis.</p>
+    <p>The backend is three NestJS services behind an nginx gateway. Each service owns its data: auth and stock have separate databases, and reports reads stock over HTTP. The business rules live in tested domain classes, and every error has a stable code that the frontend translates.</p>
+    <div class="tags">
+      <span>NestJS</span><span>Prisma</span><span>PostgreSQL</span><span>Next.js</span><span>TypeScript</span><span>Docker</span><span>Playwright</span><span>GitHub Actions</span>
+    </div>
+    <div class="links">
+      <a class="button solid" href="https://github.com/rodrigoZanardo/stock-manager">Source code</a>
+      <a class="button" href="https://github.com/rodrigoZanardo/stock-manager/blob/main/docs/DEPLOY.md">How it is deployed</a>
+    </div>
+    <div class="shots">
+      <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/dashboard.png" alt="Stock Manager dashboard" loading="lazy">
+      <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/product.png" alt="Stock Manager product page with history" loading="lazy">
+    </div>
+  </section>
+
+  <h2>What is in the repository</h2>
+  <section class="card">
+    <ul>
+      <li>Business rules in tested domain classes, with unit tests for each rule and integration tests against a real PostgreSQL database.</li>
+      <li>A race guard for stock withdrawals, enforced in the database, with an integration test that fails if the guard is removed.</li>
+      <li>Passwords hashed with scrypt, JWTs signed with RS256, a lockout after repeated failed sign-ins.</li>
+      <li>API documentation in Swagger for every route, with the error responses each route can return.</li>
+      <li>Browser end-to-end tests run in CI against the full Docker stack.</li>
+    </ul>
+  </section>
+
+  <h2>Next improvements</h2>
+  <section class="card">
+    <ul>
+      <li>Let admins change passwords and disable users, with tokens that stop working right away.</li>
+      <li>Product photos and CSV import for stock counts.</li>
+      <li>Use a private network between the services in production.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>GitHub: <a href="https://github.com/rodrigoZanardo">rodrigoZanardo</a></p>
+  </footer>
+</main>
+</body>
+</html>
