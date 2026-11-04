@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rodrigo Zanardo · Full-stack developer</title>
-  <meta name="description" content="Rodrigo Zanardo, full-stack developer (NestJS, Next.js, PostgreSQL). Two live projects that talk to each other: Stock Manager, inventory with NestJS microservices, and Live Orders, a real-time order board with WebSockets and signed webhooks.">
-  <meta property="og:title" content="Rodrigo Zanardo · Full-stack developer">
-  <meta property="og:description" content="Two live projects that talk to each other: an inventory system and a real-time order board.">
+  <meta name="description" content="Rodrigo Zanardo, desenvolvedor full-stack (NestJS, Next.js, PostgreSQL). Dois projetos no ar que conversam entre si: Stock Manager, controle de estoque com microsserviços NestJS, e Live Orders, quadro de pedidos em tempo real com WebSocket e webhooks assinados.">
+  <meta property="og:title" content="Rodrigo Zanardo · Desenvolvedor full-stack">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:description" content="Dois projetos no ar que conversam entre si: controle de estoque e quadro de pedidos em tempo real.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png">
+  <meta property="og:image" content="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png?v=2">
   <meta name="theme-color" content="#2450d8">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232450d8'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ERZ%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,7 +182,8 @@
           </div>
           <div class="links-between">
             <p class="flow" style="margin:0"><b data-i18n="flow1a">reads parts</b><span data-i18n="flow1b">catalog from Stock Manager with a read-only account</span></p>
-            <p class="flow" style="margin:0"><b data-i18n="flow2a">order delivered</b><span data-i18n="flow2b">signed webhook lowers the stock, retried until it lands</span></p>
+            <p class="flow" style="margin:0"><b data-i18n="flow3a">order created</b><span data-i18n="flow3b">reserves the parts; cancelling gives them back</span></p>
+            <p class="flow" style="margin:0"><b data-i18n="flow2a">order delivered</b><span data-i18n="flow2b">lowers the stock; every event is a signed webhook, retried until it lands</span></p>
           </div>
           <div class="node">
             <strong><i class="live" aria-hidden="true"></i><a href="#stock-manager">Stock Manager</a></strong>
@@ -216,8 +219,8 @@
           <p class="more"><a href="https://live-orders-api-c5zu.onrender.com/docs" data-i18n="apidocs">API docs (Swagger)</a> · <a href="https://github.com/rodrigoZanardo/live-orders/blob/main/docs/WEBHOOKS.md" data-i18n="webhooks">Webhooks guide</a></p>
         </div>
         <div class="shots">
-          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png" alt="Live Orders board in light theme" data-i18n-alt="alt3" loading="lazy" width="1600" height="1000">
-          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board-dark.png" alt="Live Orders parts catalog in dark theme" data-i18n-alt="alt4" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board.png?v=2" alt="Live Orders board in light theme" data-i18n-alt="alt3" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/live-orders/main/docs/board-dark.png?v=2" alt="Live Orders parts catalog in dark theme" data-i18n-alt="alt4" loading="lazy" width="1600" height="1000">
         </div>
       </article>
 
@@ -243,8 +246,8 @@
           <p class="more"><span data-i18n="apidocsby">API docs (Swagger):</span> <a href="https://stock-manager-auth.onrender.com/docs">Auth</a> · <a href="https://stock-manager-stock.onrender.com/docs">Stock</a> · <a href="https://stock-manager-reports.onrender.com/docs">Reports</a> · <a href="https://github.com/rodrigoZanardo/stock-manager/blob/main/docs/DEPLOY.md" data-i18n="deploy">How it is deployed</a></p>
         </div>
         <div class="shots">
-          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/dashboard.png" alt="Stock Manager dashboard" data-i18n-alt="alt1" loading="lazy" width="1600" height="1000">
-          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/product.png" alt="Stock Manager products with reserved and available stock" data-i18n-alt="alt2" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/dashboard.png?v=2" alt="Stock Manager dashboard" data-i18n-alt="alt1" loading="lazy" width="1600" height="1000">
+          <img src="https://raw.githubusercontent.com/rodrigoZanardo/stock-manager/main/docs/product.png?v=2" alt="Stock Manager products with reserved and available stock" data-i18n-alt="alt2" loading="lazy" width="1600" height="1000">
         </div>
       </article>
     </section>
@@ -276,7 +279,8 @@
     sysTitle: 'Como os dois projetos se conectam', sysSub: 'Os dois estão no ar. Cada ligação abaixo é uma chamada real entre eles.',
     sysLo: 'Quadro de pedidos para balcão de autopeças, atualizado ao vivo',
     flow1a: 'lê as peças', flow1b: 'do catálogo do Stock Manager com uma conta só de leitura',
-    flow2a: 'pedido entregue', flow2b: 'webhook assinado baixa o estoque, repetido até chegar',
+    flow3a: 'pedido criado', flow3b: 'reserva as peças; se cancelar, elas voltam',
+    flow2a: 'pedido entregue', flow2b: 'baixa o estoque; cada evento é um webhook assinado, repetido até chegar',
     sysSm: 'Estoque: três serviços NestJS atrás de um gateway',
     projects: 'Projetos',
     projectsIntro: 'Cada um tem demo no ar com login de teste, código-fonte completo e documentação da API. A primeira visita depois de um tempo parado pode levar cerca de um minuto (hospedagem gratuita).',
